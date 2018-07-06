@@ -36,7 +36,6 @@ public class UserController {
         return repository.getUserById(id)
                 .flatMap(new BRMapper<>())
                 .switchIfEmpty(Mono.just(BR.error()));
-
     }
 
     @GetMapping(path = "/user/{id}")
@@ -48,11 +47,6 @@ public class UserController {
 
     @PostMapping(path = "/add")
     public Mono<BR> addUser(@RequestBody User user) {
-        return repository.addUser(user);
-    }
-
-    @PostMapping(path = "/add")
-    public Mono<BR> addUser2(@RequestParam User user) {
         return repository.addUser(user);
     }
 
