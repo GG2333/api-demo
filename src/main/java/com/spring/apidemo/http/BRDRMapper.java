@@ -6,6 +6,7 @@ import reactor.core.publisher.Mono;
 
 import java.util.function.Function;
 
+@Deprecated
 public class BRDRMapper<T> implements Function<T, Mono<? extends BR<DR<T>>>> {
 
     @Override

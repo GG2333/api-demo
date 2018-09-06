@@ -1,6 +1,8 @@
 package com.spring.apidemo.mzitu;
 
+import com.spring.apidemo.data.BR;
 import com.spring.apidemo.http.EmptyException;
+import com.spring.apidemo.http.Rxs;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.ParameterizedTypeReference;
@@ -10,6 +12,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Repository
@@ -38,10 +41,18 @@ public class MzituRepository {
                 .uri(newsUri, count, page)
                 .accept(MediaType.APPLICATION_JSON)
                 .retrieve()
-                .onStatus(HttpStatus::is4xxClientError, response -> Mono.error(new EmptyException("empty")))
-                .bodyToMono(new ParameterizedTypeReference<List<MzituImage>>() {
-                })
-                .onErrorResume(EmptyException.class, e -> Mono.empty());
+                .bodyToMono(new ParameterizedTypeReference<List<MzituImage>>() {})
+                .onErrorResume(throwable -> true, e -> Mono.just(new ArrayList<>()));
+    }
+
+    public Mono<BR<List<MzituImage>>> news2(int page, int count) {
+        return webClient.get()
+                .uri(newsUri, count, page)
+                .accept(MediaType.APPLICATION_JSON)
+                .retrieve()
+                .bodyToMono(new ParameterizedTypeReference<List<MzituImage>>() {})
+                .flatMap(Rxs.baseF())
+                .onErrorResume(throwable -> true, e -> Mono.just(BR.error()));
     }
 
 }

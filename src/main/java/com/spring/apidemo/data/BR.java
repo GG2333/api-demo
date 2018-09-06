@@ -39,4 +39,12 @@ public class BR<T> {
         return new BR<>(-2, "empty");
     }
 
+    @Override
+    public String toString() {
+        return "BR{" +
+                "code=" + code +
+                ", message='" + message + '\'' +
+                ", data=" + data +
+                '}';
+    }
 }

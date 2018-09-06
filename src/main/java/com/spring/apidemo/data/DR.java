@@ -13,4 +13,10 @@ public class DR<T> {
         return new DR<>(data);
     }
 
+    @Override
+    public String toString() {
+        return "DR{" +
+                "data=" + data +
+                '}';
+    }
 }
