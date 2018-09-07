@@ -44,13 +44,13 @@ public class MzituRunner implements CommandLineRunner {
                 .uri(newsUri, 10, 10000)
                 .accept(MediaType.APPLICATION_JSON)
                 .retrieve()
-                .bodyToMono(new ParameterizedTypeReference<List<MzituImage>>() {})
+                .bodyToMono(new ParameterizedTypeReference<List<ModelEntity>>() {})
                 .onErrorResume(throwable -> true, e -> Mono.empty())
                 .switchIfEmpty(Mono.just(new ArrayList<>()))
 
-//                .subscribe(new Consumer<List<MzituImage>>() {
+//                .subscribe(new Consumer<List<ModelEntity>>() {
 //                    @Override
-//                    public void accept(List<MzituImage> mzituImages) {
+//                    public void accept(List<ModelEntity> mzituImages) {
 //                        log.info(mzituImages.toString());
 //                    }
 //                }, new Consumer<Throwable>() {
@@ -61,9 +61,9 @@ public class MzituRunner implements CommandLineRunner {
 //                });
 
 //                .flatMap(Rxs.baseF())
-//                .subscribe(new Consumer<BR<List<MzituImage>>>() {
+//                .subscribe(new Consumer<BR<List<ModelEntity>>>() {
 //                    @Override
-//                    public void accept(BR<List<MzituImage>> listBR) {
+//                    public void accept(BR<List<ModelEntity>> listBR) {
 //                        log.info(listBR.toString());
 //                    }
 //                }, new Consumer<Throwable>() {
@@ -77,14 +77,14 @@ public class MzituRunner implements CommandLineRunner {
                 .flatMap(Rxs.baseF())
 
                 // 为什么不能用呢？？？
-//                .subscribe(new Subscriber<BR<DR<List<MzituImage>>>>() {
+//                .subscribe(new Subscriber<BR<DR<List<ModelEntity>>>>() {
 //                    @Override
 //                    public void onSubscribe(Subscription s) {
 //                        log.info("onSubscribe");
 //                    }
 //
 //                    @Override
-//                    public void onNext(BR<DR<List<MzituImage>>> drbr) {
+//                    public void onNext(BR<DR<List<ModelEntity>>> drbr) {
 //                        log.info(drbr.toString());
 //                    }
 //
@@ -99,9 +99,9 @@ public class MzituRunner implements CommandLineRunner {
 //                    }
 //                });
 
-                .subscribe(new Consumer<BR<DR<List<MzituImage>>>>() {
+                .subscribe(new Consumer<BR<DR<List<ModelEntity>>>>() {
                     @Override
-                    public void accept(BR<DR<List<MzituImage>>> drbr) {
+                    public void accept(BR<DR<List<ModelEntity>>> drbr) {
                         log.info(drbr.toString());
                     }
                 }, new Consumer<Throwable>() {
