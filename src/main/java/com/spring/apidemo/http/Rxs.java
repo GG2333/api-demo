@@ -2,6 +2,7 @@ package com.spring.apidemo.http;
 
 import com.spring.apidemo.data.BR;
 import com.spring.apidemo.data.DR;
+import org.springframework.context.annotation.Bean;
 import reactor.core.publisher.Mono;
 
 import java.util.function.Function;

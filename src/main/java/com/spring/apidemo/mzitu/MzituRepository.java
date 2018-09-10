@@ -1,6 +1,7 @@
 package com.spring.apidemo.mzitu;
 
 import com.spring.apidemo.data.BR;
+import com.spring.apidemo.data.RR;
 import com.spring.apidemo.http.Rxs;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,10 +14,13 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
+import reactor.util.context.Context;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Consumer;
+import java.util.function.Function;
 
 @Repository
 public class MzituRepository {
@@ -131,28 +135,31 @@ public class MzituRepository {
         return listMono;
     }
 
-    public Mono<ImageResp> image(String id) {
-        Mono<ImageResp> imageRespMono = webClient.get()
+    public Mono<RR> image(String id) {
+        Mono<ImageResp> mono = webClient.get()
                 .uri(imageUrl, id)
                 .accept(MediaType.APPLICATION_JSON)
                 .retrieve()
                 .bodyToMono(ImageResp.class)
-                .onErrorResume(throwable -> true, e -> Mono.just(new ImageResp()));
+                .onErrorResume(throwable -> true, e -> Mono.empty());
 
-        imageRespMono.subscribe(new Consumer<ImageResp>() {
-            @Override
-            public void accept(ImageResp imageResp) {
-                imageResp.images().forEach(new Consumer<String>() {
-                    @Override
-                    public void accept(String s) {
-                        ImageEntity imageEntity = new ImageEntity(Integer.valueOf(id), s);
-                        imageRepository.save(imageEntity);
-                    }
-                });
-            }
-        });
+        if (mono.blockOptional().isPresent()) {
+            mono.subscribe(new Consumer<ImageResp>() {
+                @Override
+                public void accept(ImageResp imageResp) {
+                    imageResp.images().forEach(new Consumer<String>() {
+                        @Override
+                        public void accept(String s) {
+                            ImageEntity imageEntity = new ImageEntity(Integer.valueOf(id), s);
+                            imageRepository.save(imageEntity);
+                        }
+                    });
+                }
+            });
+            return Mono.just(RR.success());
+        }
 
-        return imageRespMono;
+        return Mono.just(RR.error());
     }
 
 }

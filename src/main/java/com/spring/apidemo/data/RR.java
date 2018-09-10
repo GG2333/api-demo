@@ -2,11 +2,37 @@ package com.spring.apidemo.data;
 
 public class RR {
 
-    public int code;
-    public String message;
+    private int code;
+    private String message;
 
-    public boolean isSuccessful() {
-        return code == 0;
+    private RR(int code, String message) {
+        this.code = code;
+        this.message = message;
     }
+
+    public int getCode() {
+        return code;
+    }
+
+    public void setCode(int code) {
+        this.code = code;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
+    public static RR success() {
+        return new RR(0, "ok");
+    }
+
+    public static RR error() {
+        return new RR(-1, "error");
+    }
+
 
 }
