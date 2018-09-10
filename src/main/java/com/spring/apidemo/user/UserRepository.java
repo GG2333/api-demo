@@ -37,6 +37,7 @@ public class UserRepository {
 
         return Mono.justOrEmpty(optionalUser)
                 .flatMap(Rxs.baseF())
+                .switchIfEmpty(Mono.just(BR.success()))
                 .onErrorResume(throwable -> true, e -> Mono.just(BR.error()));
     }
 
@@ -44,31 +45,24 @@ public class UserRepository {
         boolean f = objects.stream()
                 .anyMatch(user -> aUser.id.equals(user.id));
 
-        try {
-            if (!f) {
-                objects.add(aUser);
-                return Mono.just(BR.success());
-            } else {
-                return Mono.just(BR.error());
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
+        if (!f) {
+            objects.add(aUser);
+            return Mono.just(BR.success());
         }
+
         return Mono.just(BR.error());
     }
 
     public Mono<BR> delUser(User aUser) {
         boolean f = objects.stream()
-                .anyMatch(new Predicate<User>() {
-                    @Override
-                    public boolean test(User user) {
-                        return aUser.id.equals(user.id);
-                    }
-                });
+                .anyMatch(user -> aUser.id.equals(user.id));
 
-        if (!f)
-            objects.add(aUser);
-        return Mono.just(BR.success());
+        if (f) {
+            objects.remove(aUser);
+            return Mono.just(BR.success());
+        }
+
+        return Mono.just(BR.error());
     }
 
 }

@@ -19,10 +19,10 @@ import java.util.List;
 @RestController
 @RequestMapping(path = "/mzitu")
 @Api(tags = "妹子图")
-public class MzituController {
+public class PushController {
 
     @Autowired
-    private MzituRepository repository;
+    private PushRepository repository;
 
     @GetMapping(path = "/news")
     @ApiIgnore

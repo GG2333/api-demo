@@ -12,6 +12,7 @@ import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
+import reactor.core.publisher.BaseSubscriber;
 import reactor.core.publisher.Mono;
 import reactor.core.scheduler.Schedulers;
 
@@ -35,7 +36,7 @@ public class MzituRunner implements CommandLineRunner {
 //        webClient = WebClient.builder()
 //                .baseUrl(baseUrl)
 //                .build();
-//        running();
+//        run();
     }
 
     private void running() {
@@ -69,8 +70,6 @@ public class MzituRunner implements CommandLineRunner {
      *
      */
     private void run() {
-        log.info("run thread:[{}]",Thread.currentThread().getName());
-
         webClient.get()
                 .uri(newsUri, 10, 1)
                 .accept(MediaType.APPLICATION_JSON)
@@ -79,24 +78,29 @@ public class MzituRunner implements CommandLineRunner {
 //                .onErrorResume(throwable -> true, e -> Mono.empty())
 //                .switchIfEmpty(Mono.just(new ArrayList<>()))
 
-//                .subscribe(new Subscriber<List<ModelEntity>>() {
+//                .subscribe(new BaseSubscriber<List<ModelEntity>>() {
 //                    @Override
-//                    public void onSubscribe(Subscription s) {
+//                    protected void hookOnSubscribe(Subscription subscription) {
+//                        super.hookOnSubscribe(subscription);
 //                        log.info("onSubscribe");
+//                        request(1);
 //                    }
 //
 //                    @Override
-//                    public void onNext(List<ModelEntity> modelEntities) {
+//                    protected void hookOnNext(List<ModelEntity> value) {
+//                        super.hookOnNext(value);
 //                        log.info("onNext");
 //                    }
 //
 //                    @Override
-//                    public void onError(Throwable t) {
+//                    protected void hookOnError(Throwable throwable) {
+//                        super.hookOnError(throwable);
 //                        log.info("onError");
 //                    }
 //
 //                    @Override
-//                    public void onComplete() {
+//                    protected void hookOnComplete() {
+//                        super.hookOnComplete();
 //                        log.info("onComplete");
 //                    }
 //                });
@@ -125,73 +129,33 @@ public class MzituRunner implements CommandLineRunner {
 //                    }
 //                });
 
-                .publishOn(Schedulers.single())
-                .subscribeOn(Schedulers.immediate())
-                .subscribe(new Consumer<List<ModelEntity>>() {
-                    @Override
-                    public void accept(List<ModelEntity> modelEntities) {
-                        log.info("next thread:[{}]", Thread.currentThread().getName());
-                    }
-                }, new Consumer<Throwable>() {
-                    @Override
-                    public void accept(Throwable throwable) {
-                        log.info("error thread:[{}]", Thread.currentThread().getName());
-                    }
-                });
-
-//                .flatMap(Rxs.baseF())
-//                .subscribe(new Consumer<BR<List<ModelEntity>>>() {
+//                .publishOn(Schedulers.single())
+//                .subscribeOn(Schedulers.immediate())
+//                .subscribe(new Consumer<List<ModelEntity>>() {
 //                    @Override
-//                    public void accept(BR<List<ModelEntity>> listBR) {
-//                        log.info(listBR.toString());
+//                    public void accept(List<ModelEntity> modelEntities) {
 //                        log.info("next thread:[{}]", Thread.currentThread().getName());
 //                    }
 //                }, new Consumer<Throwable>() {
 //                    @Override
 //                    public void accept(Throwable throwable) {
-//                        log.info(throwable.getMessage());
+//                        log.info("error thread:[{}]", Thread.currentThread().getName());
 //                    }
 //                });
 
-//                .flatMap(Rxs.listF())
-//                .flatMap(Rxs.baseF())
-
-                // 为什么不能用呢？？？
-//                .subscribe(new Subscriber<BR<DR<List<ModelEntity>>>>() {
-//                    @Override
-//                    public void onSubscribe(Subscription s) {
-//                        log.info("onSubscribe");
-//                    }
-//
-//                    @Override
-//                    public void onNext(BR<DR<List<ModelEntity>>> drbr) {
-//                        log.info(drbr.toString());
-//                    }
-//
-//                    @Override
-//                    public void onError(Throwable t) {
-//                        log.info("onError");
-//                    }
-//
-//                    @Override
-//                    public void onComplete() {
-//                        log.info("onComplete");
-//                    }
-//                });
-
-//                .subscribe(new Consumer<BR<DR<List<ModelEntity>>>>() {
-//                    @Override
-//                    public void accept(BR<DR<List<ModelEntity>>> drbr) {
-//                        log.info(drbr.toString());
-//                    }
-//                }, new Consumer<Throwable>() {
-//                    @Override
-//                    public void accept(Throwable throwable) {
-//                        log.info(throwable.getMessage());
-//                    }
-//                });
-
-        log.info("END");
+                .flatMap(Rxs.listF())
+                .flatMap(Rxs.baseF())
+                .subscribe(new Consumer<BR<DR<List<ModelEntity>>>>() {
+                    @Override
+                    public void accept(BR<DR<List<ModelEntity>>> drbr) {
+                        log.info(drbr.toString());
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) {
+                        log.info(throwable.getMessage());
+                    }
+                });
 
     }
 

@@ -12,14 +12,16 @@ public class ImageEntity {
     public Integer id;
 
     @Column(name = "list_id")
-    private Integer list_id;
+    private Integer listId;
 
     @Column(name = "src")
     public String src;
 
+    public ImageEntity() {
+    }
 
-    public ImageEntity(Integer list_id, String src) {
-        this.list_id = list_id;
+    public ImageEntity(Integer listId, String src) {
+        this.listId = listId;
         this.src = src;
     }
 }

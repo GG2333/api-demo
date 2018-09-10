@@ -1,6 +1,5 @@
 package com.spring.apidemo.yabo;
 
-import com.spring.apidemo.mzitu.MzituRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.CommandLineRunner;

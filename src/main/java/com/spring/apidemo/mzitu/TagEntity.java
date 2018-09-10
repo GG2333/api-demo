@@ -11,7 +11,7 @@ public class TagEntity {
 
     @Id
     @Column(name = "id")
-    public String tagid;
+    public String id;
 
     @Column(name = "title")
     public String title;
@@ -22,7 +22,7 @@ public class TagEntity {
     @Override
     public String toString() {
         return "TagEntity{" +
-                "tagid='" + tagid + '\'' +
+                "tagid='" + id + '\'' +
                 ", title='" + title + '\'' +
                 '}';
     }

@@ -6,26 +6,20 @@ import com.spring.apidemo.http.Rxs;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.core.env.Environment;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
-import reactor.util.context.Context;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.function.Consumer;
-import java.util.function.Function;
 
 @Repository
-public class MzituRepository {
+public class PushRepository {
 
-    private static final Logger log = LoggerFactory.getLogger(MzituRepository.class);
+    private static final Logger log = LoggerFactory.getLogger(PushRepository.class);
 
     private static final String newsUrl = "/wp-json/wp/v2/posts?per_page={count}&page={page}";
     private static final String tagsUrl = "/json/x.json";
@@ -125,7 +119,7 @@ public class MzituRepository {
                 imageEntities.forEach(new Consumer<ModelEntity>() {
                     @Override
                     public void accept(ModelEntity modelEntity) {
-                        modelEntity.tag_id = Integer.valueOf(id);
+                        modelEntity.tagId = Integer.valueOf(id);
                         modelRepository.save(modelEntity);
                     }
                 });

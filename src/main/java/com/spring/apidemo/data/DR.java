@@ -2,8 +2,14 @@ package com.spring.apidemo.data;
 
 public class DR<T> {
 
-    public T data;
+    public int size;
+    public int number;
+    public int numberOfElements;
+    public int totalPages;
+    public long totalElements;
+    public boolean isLast;
 
+    public T data;
 
     public DR(T data) {
         this.data = data;
