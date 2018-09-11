@@ -1,7 +1,5 @@
 package com.spring.apidemo.mzitu;
 
-import io.swagger.annotations.ApiModelProperty;
-
 import javax.persistence.*;
 
 @Entity
@@ -27,10 +25,9 @@ public class ModelEntity {
     @Column(name = "thumb_src_min")
     public String minSrc;
 
-
-//    @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.REFRESH})
-//    @JoinColumn(name = "tag_id", insertable=false, updatable=false)
-//    public TagEntity tagEntity;
+    @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.REFRESH})
+    @JoinColumn(name = "tag_id", insertable=false, updatable=false)
+    public TagEntity tagEntity;
 
     @Override
     public String toString() {

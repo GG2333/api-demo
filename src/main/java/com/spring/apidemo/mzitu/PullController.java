@@ -45,4 +45,21 @@ public class PullController {
         return repository.getImagesByImageId(id, page, count);
     }
 
+    @GetMapping(path = "/another-lists")
+    @ApiIgnore
+    public Mono<BR<DR<List<ModelEntity>>>> anotherLists(
+            @RequestParam("id") int id,
+            @RequestParam("page") int page,
+            @RequestParam("count") int count) {
+        return repository.getAnotherLists(id, page, count);
+    }
+
+    @GetMapping(path = "/all-lists")
+    @ApiIgnore
+    public Mono<BR<DR<List<ModelEntity>>>> allLists(
+            @RequestParam("page") int page,
+            @RequestParam("count") int count) {
+        return repository.getAllSortLists(page, count);
+    }
+
 }
