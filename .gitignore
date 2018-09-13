@@ -1,6 +1,7 @@
 .gradle
 /build/
 !gradle/wrapper/gradle-wrapper.jar
+api-demo-0.0.1.jar
 
 ### STS ###
 .apt_generated

@@ -12,7 +12,7 @@ public class ImageEntity {
     public Integer id;
 
     @Column(name = "list_id")
-    private Integer listId;
+    public Integer listId;
 
     @Column(name = "src")
     public String src;

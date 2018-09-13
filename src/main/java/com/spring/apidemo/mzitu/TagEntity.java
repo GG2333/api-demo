@@ -1,9 +1,8 @@
 package com.spring.apidemo.mzitu;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+import javax.persistence.*;
 
 @Entity
 @Table(name = "Tag")
@@ -11,7 +10,12 @@ public class TagEntity {
 
     @Id
     @Column(name = "id")
-    public String id;
+    @GeneratedValue
+    public Integer id;
+
+    @Column(name = "tag_id")
+    @JsonProperty(value = "tagid")
+    public String tagId;
 
     @Column(name = "title")
     public String title;
@@ -22,8 +26,10 @@ public class TagEntity {
     @Override
     public String toString() {
         return "TagEntity{" +
-                "tagid='" + id + '\'' +
+                "tagId='" + tagId + '\'' +
                 ", title='" + title + '\'' +
+                ", cover='" + cover + '\'' +
                 '}';
     }
+
 }

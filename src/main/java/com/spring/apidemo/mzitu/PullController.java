@@ -22,8 +22,8 @@ public class PullController {
     @GetMapping(path = "/tags")
     @ApiIgnore
     public Mono<BR<DR<List<TagEntity>>>> tags(
-            @RequestParam("page") int page,
-            @RequestParam("count") int count) {
+            @RequestParam(name = "page", required = false, defaultValue = "0") int page,
+            @RequestParam(name = "count", required = false, defaultValue = "10") int count) {
         return repository.tags(page, count);
     }
 

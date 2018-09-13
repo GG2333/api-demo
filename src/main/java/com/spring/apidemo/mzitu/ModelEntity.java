@@ -1,5 +1,7 @@
 package com.spring.apidemo.mzitu;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import javax.persistence.*;
 
 @Entity
@@ -17,12 +19,15 @@ public class ModelEntity {
     public String title;
 
     @Column(name = "img_num")
+    @JsonProperty(value = "img_num")
     public int number;
 
     @Column(name = "thumb_src")
+    @JsonProperty(value = "thumb_src")
     public String src;
 
     @Column(name = "thumb_src_min")
+    @JsonProperty(value = "thumb_src_min")
     public String minSrc;
 
     @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.REFRESH})
