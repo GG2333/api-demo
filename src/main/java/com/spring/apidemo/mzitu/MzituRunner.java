@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
+import java.util.function.Function;
 
 @Component
 public class MzituRunner implements CommandLineRunner {
@@ -40,43 +41,60 @@ public class MzituRunner implements CommandLineRunner {
     }
 
     private void running() {
-        Mono<List<ModelEntity>> mono =
         webClient.get()
-                .uri(newsUri, 10, 1)
+                .uri(newsUri, 10, 1000)
                 .accept(MediaType.APPLICATION_JSON)
                 .retrieve()
-                .bodyToMono(new ParameterizedTypeReference<List<ModelEntity>>() {})
-                .onErrorResume(throwable -> true, e -> Mono.empty());
-
-//        log.info("start thread:[{}]",Thread.currentThread().getName());
-//        List<ModelEntity> entities = mono.block();
-//        log.info("end thread:[{}]",Thread.currentThread().getName());
-
-        log.info("start thread:[{}]",Thread.currentThread().getName());
-        Optional<List<ModelEntity>> entities = mono.blockOptional();
-        if (entities.isPresent()) {
-            log.info("true thread:[{}]",Thread.currentThread().getName());
-        } else {
-            log.info("false thread:[{}]",Thread.currentThread().getName());
-        }
-        log.info("end thread:[{}]",Thread.currentThread().getName());
-
+                .bodyToMono(new ParameterizedTypeReference<List<ModelEntity>>() {
+                })
+                .subscribe(new Consumer<List<ModelEntity>>() {
+                    @Override
+                    public void accept(List<ModelEntity> modelEntities) {
+                        log.info("accept thread:[{}]", Thread.currentThread().getName());
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) {
+                        log.info("error thread:[{}]", Thread.currentThread().getName());
+                    }
+                });
     }
 
+    private void running2() {
+        Mono<List<ModelEntity>> mono = webClient.get()
+                .uri(newsUri, 10, 1000)
+                .accept(MediaType.APPLICATION_JSON)
+                .retrieve()
+                .bodyToMono(new ParameterizedTypeReference<List<ModelEntity>>() {
+                })
+                .onErrorResume(new Function<Throwable, Mono<? extends List<ModelEntity>>>() {
+                    @Override
+                    public Mono<? extends List<ModelEntity>> apply(Throwable throwable) {
+                        log.info("child thread:[{}]", Thread.currentThread().getName());
+                        return Mono.empty();
+                    }
+                });
+
+        /* 主线程，不可以阻塞 */
+        log.info("main thread:[{}]", Thread.currentThread().getName());
+        Optional<List<ModelEntity>> entities = mono.blockOptional();
+        if (entities.isPresent()) {
+            log.info("true thread:[{}]", Thread.currentThread().getName());
+        } else {
+            log.info("false thread:[{}]", Thread.currentThread().getName());
+        }
+    }
 
     /**
-     *
      * ClientResponse has erroneous status code: 400 Bad Request
-     *
      */
     private void run() {
         webClient.get()
-                .uri(newsUri, 10, 1)
+                .uri(newsUri, 10, 1000)
                 .accept(MediaType.APPLICATION_JSON)
                 .retrieve()
-                .bodyToMono(new ParameterizedTypeReference<List<ModelEntity>>() {})
-//                .onErrorResume(throwable -> true, e -> Mono.empty())
-//                .switchIfEmpty(Mono.just(new ArrayList<>()))
+                .bodyToMono(new ParameterizedTypeReference<List<ModelEntity>>() {
+                })
 
 //                .subscribe(new BaseSubscriber<List<ModelEntity>>() {
 //                    @Override
@@ -105,44 +123,6 @@ public class MzituRunner implements CommandLineRunner {
 //                    }
 //                });
 
-//                .subscribe(new Consumer<List<ModelEntity>>() {
-//                    @Override
-//                    public void accept(List<ModelEntity> mzituImages) {
-//                        log.info(mzituImages.toString());
-//                        log.info("next thread:[{}]", Thread.currentThread().getName());
-//                    }
-//                }, new Consumer<Throwable>() {
-//                    @Override
-//                    public void accept(Throwable throwable) {
-//                        log.info(throwable.getMessage());
-//                        log.info("error thread:[{}]", Thread.currentThread().getName());
-//                    }
-//                }, new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        log.info("complete thread:[{}]", Thread.currentThread().getName());
-//                    }
-//                }, new Consumer<Subscription>() {
-//                    @Override
-//                    public void accept(Subscription subscription) {
-//                        log.info("subscribe thread:[{}]", Thread.currentThread().getName());
-//                    }
-//                });
-
-//                .publishOn(Schedulers.single())
-//                .subscribeOn(Schedulers.immediate())
-//                .subscribe(new Consumer<List<ModelEntity>>() {
-//                    @Override
-//                    public void accept(List<ModelEntity> modelEntities) {
-//                        log.info("next thread:[{}]", Thread.currentThread().getName());
-//                    }
-//                }, new Consumer<Throwable>() {
-//                    @Override
-//                    public void accept(Throwable throwable) {
-//                        log.info("error thread:[{}]", Thread.currentThread().getName());
-//                    }
-//                });
-
                 .flatMap(Rxs.listF())
                 .flatMap(Rxs.baseF())
                 .subscribe(new Consumer<BR<DR<List<ModelEntity>>>>() {
@@ -156,7 +136,6 @@ public class MzituRunner implements CommandLineRunner {
                         log.info(throwable.getMessage());
                     }
                 });
-
     }
 
 }

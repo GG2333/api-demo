@@ -1,7 +1,7 @@
 package com.spring.apidemo.mzitu;
 
 import com.spring.apidemo.data.BR;
-import com.spring.apidemo.data.RR;
+import com.spring.apidemo.data.SelfResult;
 import com.spring.apidemo.http.Rxs;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -129,7 +129,7 @@ public class PushRepository {
         return listMono;
     }
 
-    public Mono<RR> image(String id) {
+    public Mono<SelfResult> image(String id) {
         Mono<ImageResp> mono = webClient.get()
                 .uri(imageUrl, id)
                 .accept(MediaType.APPLICATION_JSON)
@@ -150,10 +150,10 @@ public class PushRepository {
                     });
                 }
             });
-            return Mono.just(RR.success());
+            return Mono.just(SelfResult.success());
         }
 
-        return Mono.just(RR.error());
+        return Mono.just(SelfResult.error());
     }
 
 }

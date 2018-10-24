@@ -1,7 +1,7 @@
 package com.spring.apidemo.mzitu;
 
 import com.spring.apidemo.data.BR;
-import com.spring.apidemo.data.RR;
+import com.spring.apidemo.data.SelfResult;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -60,7 +60,7 @@ public class PushController {
 
     @GetMapping(path = "/image")
     @ApiIgnore
-    public Mono<RR> image(@RequestParam("id") String id) {
+    public Mono<SelfResult> image(@RequestParam("id") String id) {
         return repository.image(id);
     }
 
